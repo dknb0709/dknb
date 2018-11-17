@@ -1,4 +1,4 @@
-#ifdef _DKNB_PROPERTY_HPP_
+#ifndef _DKNB_PROPERTY_HPP_
 #define _DKNB_PROPERTY_HPP_
 
 #include <iostream>
@@ -15,6 +15,12 @@ struct property : public singleton<property> {
 
   struct pair {
     std::string key, value;
+    std::string to_str() {
+      return value;
+    }
+    int to_int() {
+      return std::stoi(value);
+    }
     void parse(const std::string&& s) {
       int trim_starts;
       std::string trimmed = s;
@@ -50,12 +56,12 @@ struct property : public singleton<property> {
     }
   }
 
-  static std::string get(const std::string& key) {
+  static pair get(const std::string& key) {
     std::string prop = key.substr(0, key.find("::"));
     if (props_[prop] != "registered") {
       load(prop);
     }
-    return props_[key];
+    return { key, props_[key] };
   }
 
   friend std::ostream& operator<<(std::ostream& out, const property& prop);
