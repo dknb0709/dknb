@@ -73,9 +73,4 @@ std::map<std::string, std::string> property::props_;
 
 } // namespace dknb
 
-int main () {
-  std::string ret = dknb::property::get("config::test.dknb.prop.normal");
-  std::cout << ret << std::endl;
-  std::cout << dknb::property::get_instance() << std::endl;
-}
 
