@@ -4,45 +4,61 @@
 #include <map>
 #include <string>
 
-enum Events {
+enum Event {
   EvStart = 0,
   EvStop
 };
 
-template <class Derived>
 class state_base {
 public:
-  static Derived* get_instance() {
-    static Derived instance;
-    return &instance;
-  }
-  virtual void perform() const = 0;
+  virtual void process_event(Event ev) = 0;
   virtual char const* to_string() const {
     return "[warn]not implemented";
   }
 };
 
-class stopped : public state_base<stopped> {
+template <class Derived>
+class state : public state_base {
+public:
+  static Derived* get_instance() {
+    static Derived instance;
+    return &instance;
+  }
+};
+
+class stopped : public state<stopped> {
+  friend class state<stopped>;
   stopped(){}
 public:
-  virtual void perform() const override {
+  virtual void process_event(Event ev) override {
     std::cout << __PRETTY_FUNCTION__ << std::endl;
+  }
+  virtual char const* to_string() const override {
+    return "stopped";
   }
 };
 
-class started : public state_base<started> {
+class started : public state<started> {
+  friend class state<started>;
   started(){}
 public:
-  virtual void perform() const override {
+  virtual void process_event(Event ev) override {
     std::cout << __PRETTY_FUNCTION__ << std::endl;
+  }
+  virtual char const* to_string() const override {
+    return "started";
   }
 };
 
-class paused : public state_base<paused> {
+class paused : public state<paused> {
+  friend class state<paused>;
   paused(){}
 public:
-  virtual void perform() const override {
+  virtual void process_event(Event ev) override {
     std::cout << __PRETTY_FUNCTION__ << std::endl;
+  }
+  virtual char const* to_string() const override {
+    return "paused";
   }
 };
 
@@ -54,19 +70,19 @@ class state_machine {
   state_base* resolve_next(int ev) {
     return trans_[current_][events_[ev]];
   }
-  void perform() {
-    current_->perform();
+  void process_event(Event ev) {
+    current_->process_event(ev);
   }
 public:
   state_machine(
-      int initial,
+      state_base* initial,
       std::array<int, NumEvents> events,
       std::map<state_base*, std::array<state_base*, NumStates>> trans)
       : current_(initial)
       , events_(events)
       , trans_(trans)
   { }
-  void dispatch_event(int ev) {
+  void dispatch_event(Event ev) {
     state_base* prev = current_;
     current_ = resolve_next(ev);
     if (prev != current_) {
@@ -76,30 +92,30 @@ public:
                 << current_->to_string()
                 << std::endl;
     }
-    perform();
+    process_event(ev);
   }
 };
 
 int main () {
 
-  base_state* Stopped = stopped::get_instance();
-  base_state* Started = started::get_instance();
-  base_state* Stopped = paused::get_instance();
+  state_base* Stopped = stopped::get_instance();
+  state_base* Started = started::get_instance();
+  state_base* Paused = paused::get_instance();
 
   state_machine<2, 2> sm(
       Stopped, { EvStart, EvStop },
       {
         { Stopped, { Started, Stopped } },
-        { Started, { Paused, Stopped } }
+        { Started, { Paused, Stopped } },
         { Paused, { Started, Stopped } }
       });
 
-  std::vector<Events> feed = {
+  std::vector<Event> feed = {
     EvStart, EvStop, EvStart, EvStart, EvStop
   };
 
   for (auto ev : feed) {
-    sm.dispatch_event(static_cast<int>(ev));
+    sm.dispatch_event(ev);
   }
 
 }
