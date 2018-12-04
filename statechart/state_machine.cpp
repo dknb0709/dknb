@@ -4,6 +4,8 @@
 #include <map>
 #include <string>
 
+// TODO: refactor this for easy reuse
+
 enum Event {
   EvStart = 0,
   EvStop
@@ -31,7 +33,7 @@ class stopped : public state<stopped> {
   stopped(){}
 public:
   virtual void process_event(Event ev) override {
-    std::cout << __PRETTY_FUNCTION__ << std::endl;
+    std::cout << "process " << to_string() << std::endl;
   }
   virtual char const* to_string() const override {
     return "stopped";
@@ -43,7 +45,7 @@ class started : public state<started> {
   started(){}
 public:
   virtual void process_event(Event ev) override {
-    std::cout << __PRETTY_FUNCTION__ << std::endl;
+    std::cout << "process " << to_string() << std::endl;
   }
   virtual char const* to_string() const override {
     return "started";
@@ -55,7 +57,7 @@ class paused : public state<paused> {
   paused(){}
 public:
   virtual void process_event(Event ev) override {
-    std::cout << __PRETTY_FUNCTION__ << std::endl;
+    std::cout << "process " << to_string() << std::endl;
   }
   virtual char const* to_string() const override {
     return "paused";
@@ -64,9 +66,18 @@ public:
 
 template <size_t NumEvents, size_t NumStates>
 class state_machine {
+
   state_base* current_;
+  
+  /**
+   * A hierarchy should be constructed with the
+   * following two variables as a unit
+   * so that it can deal with adding
+   * states such as power on/off
+   **/
   std::array<int, NumEvents> events_;
-  std::map<state_base*, std::array<state_base*, NumStates>> trans_;
+  std::map<state_base*, std::array<state_base*, NumEvents>> trans_;
+
   state_base* resolve_next(int ev) {
     return trans_[current_][events_[ev]];
   }
@@ -77,7 +88,7 @@ public:
   state_machine(
       state_base* initial,
       std::array<int, NumEvents> events,
-      std::map<state_base*, std::array<state_base*, NumStates>> trans)
+      std::map<state_base*, std::array<state_base*, NumEvents>> trans)
       : current_(initial)
       , events_(events)
       , trans_(trans)
@@ -86,9 +97,9 @@ public:
     state_base* prev = current_;
     current_ = resolve_next(ev);
     if (prev != current_) {
-      std::cout << "switch state, from "
+      std::cout << "switch state: "
                 << prev->to_string()
-                << " to " 
+                << " => "
                 << current_->to_string()
                 << std::endl;
     }
@@ -102,7 +113,7 @@ int main () {
   state_base* Started = started::get_instance();
   state_base* Paused = paused::get_instance();
 
-  state_machine<2, 2> sm(
+  state_machine<2, 3> sm(
       Stopped, { EvStart, EvStop },
       {
         { Stopped, { Started, Stopped } },
