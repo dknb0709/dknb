@@ -2,52 +2,79 @@
 #include <array>
 #include <vector>
 #include <map>
+#include <string>
 
 enum Events {
   EvStart = 0,
   EvStop
 };
 
-enum States {
-  Stopped = 0,
-  Started,
-  Paused
+template <class Derived>
+class state_base {
+public:
+  static Derived* get_instance() {
+    static Derived instance;
+    return &instance;
+  }
+  virtual void perform() const = 0;
+  virtual char const* to_string() const {
+    return "[warn]not implemented";
+  }
+};
+
+class stopped : public state_base<stopped> {
+  stopped(){}
+public:
+  virtual void perform() const override {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
+  }
+};
+
+class started : public state_base<started> {
+  started(){}
+public:
+  virtual void perform() const override {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
+  }
+};
+
+class paused : public state_base<paused> {
+  paused(){}
+public:
+  virtual void perform() const override {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
+  }
 };
 
 template <size_t NumEvents, size_t NumStates>
 class state_machine {
-  int current_;
+  state_base* current_;
   std::array<int, NumEvents> events_;
-  std::map<int, std::array<int, NumStates>> trans_;
-  int resolve_next(int ev) {
+  std::map<state_base*, std::array<state_base*, NumStates>> trans_;
+  state_base* resolve_next(int ev) {
     return trans_[current_][events_[ev]];
   }
   void perform() {
-    switch (current_) {
-      case Stopped:
-        std::cout << "perform Stopped" << std::endl; break;
-      case Started:
-        std::cout << "perform Started" << std::endl; break;
-      case Paused:
-        std::cout << "perform Paused" << std::endl; break;
-      default:
-        break;
-    }
+    current_->perform();
   }
 public:
   state_machine(
       int initial,
       std::array<int, NumEvents> events,
-      std::map<int, std::array<int, NumStates>> trans)
+      std::map<state_base*, std::array<state_base*, NumStates>> trans)
       : current_(initial)
       , events_(events)
       , trans_(trans)
   { }
   void dispatch_event(int ev) {
-    int prev = current_;
+    state_base* prev = current_;
     current_ = resolve_next(ev);
     if (prev != current_) {
-      std::cout << "switch state, from " << prev << " to " << current_ << std::endl;
+      std::cout << "switch state, from "
+                << prev->to_string()
+                << " to " 
+                << current_->to_string()
+                << std::endl;
     }
     perform();
   }
@@ -55,11 +82,16 @@ public:
 
 int main () {
 
+  base_state* Stopped = stopped::get_instance();
+  base_state* Started = started::get_instance();
+  base_state* Stopped = paused::get_instance();
+
   state_machine<2, 2> sm(
       Stopped, { EvStart, EvStop },
       {
         { Stopped, { Started, Stopped } },
         { Started, { Paused, Stopped } }
+        { Paused, { Started, Stopped } }
       });
 
   std::vector<Events> feed = {
