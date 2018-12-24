@@ -28,7 +28,7 @@ int main (int argc, char** argv) {
       if (i == 0) std::cout << std::setw(8) << line++ << "  ";
       // 先頭と8バイト目には半角スペース
       if (i == 8) std::cout << ' ';
-      // 1バイト分を半角スペース区切りで16進数表示(00 -> FF)
+      // 1バイト分を半角スペース区切りで16進数表示(00 ~ FF)
       std::cout << std::setw(2) << static_cast<int>(byte) << ' ';
     }
 
