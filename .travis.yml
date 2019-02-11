@@ -1,13 +1,17 @@
 language: cpp
 
+compiler:
+  - g++-7
+  - clang
+
 install:
-  - make get-deps
   - git clone -b master --depth 1 https://github.com/dknb0709/dknb.git root
   - cd root
   - export ROOT="`pwd`"
-
-compiler:
-  - gcc
+  - sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
+  - sudo apt update
+  - sudo apt install -y g++-7
+  - sudo apt install -y clang
 
 script:
   - ./build-and-test.sh
