@@ -1,0 +1,1 @@
+/usr/bin/c++   -std=c++11 -Wall -Wextra -g -O0 -fprofile-arcs -ftest-coverage -g  -rdynamic CMakeFiles/test_string_util.out.dir/test_string_util.o  -o test_string_util.out 

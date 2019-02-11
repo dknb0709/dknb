@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC  -std=c++11 -Wall -Wextra -g -O0 -fprofile-arcs -ftest-coverage -g  -shared -Wl,-soname,libsample2.so -o libsample2.so CMakeFiles/sample2.dir/sample2.o 

@@ -1,0 +1,1 @@
+/usr/bin/c++   -std=c++11 -Wall -Wextra -g -O0 -fprofile-arcs -ftest-coverage -g  -rdynamic CMakeFiles/test_sample2.out.dir/test_sample2.o  -o test_sample2.out -Wl,-rpath,/home/dknb/dev/work/dknb/build/src ../src/libsample2.so 

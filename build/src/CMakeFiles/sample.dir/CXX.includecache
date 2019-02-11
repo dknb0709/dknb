@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/sample.hpp
+string
+-
+
+/home/dknb/dev/work/dknb/src/sample.cpp
+sample.hpp
+/home/dknb/dev/work/dknb/src/sample.hpp
+
