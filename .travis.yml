@@ -1,7 +1,7 @@
 language: cpp
 
 compiler:
-  - g++-7
+  - g++
   - clang
 
 install:
@@ -10,7 +10,7 @@ install:
   - export ROOT="`pwd`"
   - sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
   - sudo apt update
-  - sudo apt install -y g++-7
+  - sudo apt install -y g++
   - sudo apt install -y clang
 
 script:
