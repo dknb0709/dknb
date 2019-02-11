@@ -1,9 +1,13 @@
 language: cpp
 
 install:
+  - make get-deps
   - git clone -b master --depth 1 https://github.com/dknb0709/dknb.git root
   - cd root
   - export ROOT="`pwd`"
+
+compiler:
+  - gcc
 
 script:
   - ./build-and-test.sh
