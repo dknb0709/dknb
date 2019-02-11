@@ -1,0 +1,17 @@
+language: cpp
+
+install:
+  - git clone -b master --depth 1 https://github.com/dknb0709/dknb.git root
+  - cd root
+  - export ROOT="`pwd`"
+
+script:
+  - ./build-and-test.sh
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
+notifications:
+  email:
+    false
+
