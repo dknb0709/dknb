@@ -1,4 +1,4 @@
-#include "sample.hpp"
+#include <sample.hpp>
 
 Person::Person(const std::string& name, unsigned age)
   : name_(name)

@@ -1,33 +1,30 @@
 #include <cassert>
+#include <iostream>
 #include <string_util/string_util.hpp>
 
 void test_split() {
-  std::vector<std::string> ret = split("aaa,bbb,ccc", ",");
-  for (std::string s : ret) {
-    std::cout << s << std::endl;
+  std::vector<std::string> actual = split("aaa,bbb,ccc", ",");
+  std::vector<std::string> expected = { "aaa", "bbb", "ccc" };
+  int i = 0;
+  for (std::string s : actual) {
+    assert(s == expected[i++]);
   }
 }
 
-void test_find_next_submatch() {
+void test_find() {
   
   std::string str = "ABCDEFG", ptn = "DEF";
-  int begin = 0;
+  int pos = find(str, ptn);
+  assert(pos == 3);
 
-  std::pair<bool, int> res = find_next_submatch(str, ptn, begin);
-  assert(res.first == true);
-  assert(res.second == 4);
-
-  str = "ABCDEFG"; ptn = "DEF";
-  begin = 4;
-
-  res = find_next_submatch(str, ptn, begin);
-  assert(res.first == false);
-  assert(res.second == -1);
+  str = "ABCDEFG"; ptn = "DEFH";
+  pos = find(str, ptn);
+  assert(pos == -1);
 
 }
 
 int main() {
   test_split();
-  test_find_next_submatch();
+  test_find();
 }
 

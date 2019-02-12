@@ -23,7 +23,19 @@ function run-tests()
   done
 }
 
+function show_coverage()
+{
+  cd $BUILD_DIR/test
+  gcov ../../src/*.cpp --object-directory ../src/CMakeFiles/*.dir/
+  find . -name "*.cpp.gcov" -print0 | while read -d $'\0' f
+  do
+    cat "$f"
+  done
+}
+
 build
 
 run-tests $BUILD_DIR
+
+#show_coverage
 

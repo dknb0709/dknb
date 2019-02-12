@@ -25,6 +25,8 @@ utility
 /home/dknb/dev/work/dknb/test/test_string_util.cpp
 cassert
 -
+iostream
+-
 string_util/string_util.hpp
 -
 

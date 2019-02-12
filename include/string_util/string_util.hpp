@@ -21,32 +21,43 @@ int find_next_head(const std::string& str, const std::string& ptn, int begin) {
   return -1;
 }
 
-// std=c++11
-std::pair<bool, int> find_next_submatch(
+std::pair<bool, int> find_next_substr(
     const std::string& str,
     const std::string& ptn,
     int begin) {
 
   int pos = find_next_head(str, ptn, begin);
-  if (pos == -1) {
+  if (pos == -1 || str.size() < begin + ptn.size()) {
     return { false, -1 };
   }
-  
+
   for (uint i = 0; i < ptn.size(); ++i) {
-    if (str[begin + i] != ptn[i]) {
-      return { false, begin + i };
+    if (str[pos + i] != ptn[i]) {
+      return { false, pos + i + 1 };
     }
   }
-  return { true, begin + 1 };
+  return { true, pos };
 }
 
-int count_submatch(const std::string& str, const std::string& ptn) {
+int find(const std::string& str, const std::string& ptn) {
+  int pos = 0;
+  while (pos != -1) {
+    std::pair<bool, int> res = find_next_substr(str, ptn, pos);
+    pos = res.second;
+    if (res.first) {
+      return pos;
+    }
+  }
+  return -1;
+}
+
+int count_substr(const std::string& str, const std::string& ptn) {
   
   if (str.size() < ptn.size()) {
     return 0;
   }
 
-  std::pair<bool, int> m = find_next_submatch(str, ptn, 0);
+  std::pair<bool, int> m = find_next_substr(str, ptn, 0);
   bool found = m.first;
   int next_find_pos = m.second;
   if (next_find_pos == -1) { // find_next_head hits nothing
@@ -60,7 +71,7 @@ int count_submatch(const std::string& str, const std::string& ptn) {
       ++count;
     }
 
-    m = find_next_submatch(str, ptn, next_find_pos);
+    m = find_next_substr(str, ptn, next_find_pos);
     found = m.first;
     next_find_pos = m.second;
 
