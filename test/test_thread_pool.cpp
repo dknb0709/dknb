@@ -1,6 +1,6 @@
-#include "thread_pool.hpp"
-#include <iostream>
 #include <future>
+#include <iostream>
+#include <parallel/thread/thread_pool.hpp>
 #include <vector>
 
 int square(int n) { return n * n; }
@@ -13,7 +13,7 @@ void test_use_directly() {
       results.push_back(pool.enqueue(square, static_cast<int>(i)));
     }
 
-    for (auto& result : results) {
+    for (auto &result : results) {
       result.wait();
       std::cout << result.get() << ' ';
     }
@@ -25,16 +25,13 @@ class test_composition {
   std::vector<std::future<int>> results_;
   std::shared_ptr<dknb::parallel::thread_pool> pool_;
   struct worker_process {
-    int operator()(int n) {
-      return n * n;
-    }
+    int operator()(int n) { return n * n; }
   };
-public:
+
+ public:
   test_composition(int threads)
-  : pool_(new dknb::parallel::thread_pool(threads))
-  { }
-  virtual ~test_composition()
-  { }
+      : pool_(new dknb::parallel::thread_pool(threads)) {}
+  virtual ~test_composition() {}
 
   void request(int n) {
     std::function<int()> f = std::bind(test_composition::worker_process(), n);
@@ -42,7 +39,7 @@ public:
   }
 
   void get_results() {
-    for (auto& result : results_) {
+    for (auto &result : results_) {
       result.wait();
       std::cout << result.get() << ' ';
     }
@@ -50,7 +47,7 @@ public:
   }
 };
 
-int main () {
+int main() {
   std::cout << "test_use_directly" << std::endl;
   test_use_directly();
 

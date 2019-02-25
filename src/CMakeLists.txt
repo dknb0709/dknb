@@ -1,16 +1,8 @@
-add_library(sample
+add_library(thread_pool
   SHARED
-    sample.cpp
+    thread_pool.cpp
   )
-target_include_directories(sample
-    PUBLIC ${PROJECT_SOURCE_DIR}/include
-  )
-
-add_library(sample2
-  SHARED
-    sample2.cpp
-  )
-target_include_directories(sample2
+target_include_directories(thread_pool
     PUBLIC ${PROJECT_SOURCE_DIR}/include
   )
 

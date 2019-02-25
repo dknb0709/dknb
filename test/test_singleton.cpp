@@ -1,4 +1,4 @@
-#include "../singleton.hpp"
+#include <common/singleton.hpp>
 #include <iostream>
 
 template <class Derived>
@@ -20,5 +20,7 @@ public:
 };
 
 int main () {
+  std::cout << "[test] start common/singleton test" << std::endl;
   sample::get_instance().perform();
+  std::cout << "[test] finish common/singleton test" << std::endl;
 }

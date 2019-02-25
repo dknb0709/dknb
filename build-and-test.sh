@@ -10,7 +10,7 @@ function build()
   echo build start [$ROOT]
   rm -rf $BUILD_DIR
   mkdir $BUILD_DIR && cd $BUILD_DIR
-  cmake .. -DBUILD_TYPE=coverage
+  cmake .. -DBUILD_TYPE=coverage -DCMAKE_EXPORT_COMPILE_COMMANDS=1
   make
   echo build finish
 }
