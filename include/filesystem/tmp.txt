@@ -1,6 +1,0 @@
-filesystem::root;
-filesystem::path = { "path/to/my/src(file|directory)" };
-filesystem::create(path);
-
-
-

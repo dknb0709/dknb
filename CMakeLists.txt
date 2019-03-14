@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.1)
 
-project(travis-test-project CXX)
+project(dknb CXX)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Wextra")
 
 if (${BUILD_TYPE} STREQUAL "coverage")
   
