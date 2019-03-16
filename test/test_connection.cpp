@@ -1,3 +1,4 @@
+#include <iostream>
 #include <net/common/connection.hpp>
 
 #define DEBUG(arg) std::cout << "[debug] " #arg " = " << (arg) << std::endl

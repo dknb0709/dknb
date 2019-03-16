@@ -7,11 +7,11 @@
 #include <regex>
 #include <vector>
 
-#include <common/singleton.hpp>
+#include <common/Singleton.hpp>
 
 namespace dknb {
 
-struct property : public singleton<property> {
+struct property : public Singleton<property> {
   struct pair {
     std::string key, value;
     std::string to_str() { return value; }
